@@ -16,12 +16,9 @@ class Delayer(ABC):
 
     @property
     @abstractmethod
-    def noise_intensity(self):
+    def delay_intensity(self):
         pass
 
     @abstractmethod
     def generate_process_time(self, event_time: datetime) -> datetime:
-        pass
-
-    def plot_delay(self,dataset: TimeSeriesDataSet, output_file: str):
         pass

@@ -5,7 +5,7 @@ from random import random
 from datetime import datetime,timedelta
 
 
-class UniformDela(Delayer):
+class UniformDelayer(Delayer):
 
     def __init__(self, lower_s: float, upper_s: float)-> None:
         self.lower_s = lower_s
@@ -15,5 +15,5 @@ class UniformDela(Delayer):
         return event_time + timedelta(seconds= (self.upper_s - self.lower_s) * random() + self.lower_s)
 
     @property
-    def noise_intensity(self):
+    def delay_intensity(self):
         return (self.upper_s + self.lower_s) / 2

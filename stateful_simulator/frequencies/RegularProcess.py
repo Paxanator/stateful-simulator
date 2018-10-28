@@ -2,7 +2,7 @@
 
 from stateful_simulator.frequencies.DataFrequency import DataFrequency
 from random import random
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 
 class RegularProcess(DataFrequency):

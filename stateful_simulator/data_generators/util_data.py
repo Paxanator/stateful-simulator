@@ -47,12 +47,14 @@ def deterministic_dataset(decision_function: Callable[[List[float]], float],
         targets.append(0)  # We will redefine later
 
     train_timestamp = timestamps[round(len(timestamps) * train_percentage)]
+    # NOTE: do not need to worry about dropping "incomplete" timestamps when time - lookback < start_time
+    # Because the generating model is identical.
+    # TODO: Figure out a way to drop timestamps < lookback optionally
     data_set = TimeSeriesDataSet(timestamps=timestamps,
                                  target=targets,
                                  train_timestamp=RecordTime(init_time, init_time),
                                  numeric_features=numeric_features,
-                                 feature_cols=["feature_" + str(feature) for feature in range(num_features)],
-                                 sorted=False)
+                                 feature_cols=["feature_" + str(feature) for feature in range(num_features)])
 
     def predict_chunk(x):
         return decision_function(featurizer.featurize(x).features) + random_error()
