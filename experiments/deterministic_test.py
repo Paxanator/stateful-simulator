@@ -22,8 +22,8 @@ def main():
                                     frequency=lambda: timedelta(minutes=random()*3)
                                     )
 
-    noiser = ExponentialDelayer(1 / (60))
-    delayed_dataset = noiser.add_delay(dataset)
+    delayer = ExponentialDelayer(1 / (60))
+    delayed_dataset = delayer.add_delay(dataset)
     model = SklearnModel(LinearRegression())
 
     stateful_model = StatefulModel(model, aggregator, timedelta(minutes=10))

@@ -16,8 +16,8 @@ def main():
         target_col='Appliances',
         feature_cols=["lights"] + ["T" + str(room) for room in range(1,10)] + ["RH_" + str(room) for room in range(1,10)],
         train_percetange=0.5)
-    noiser = ExponentialDelayer(60 * 60 * 24)
-    delayed_dataset = noiser.add_delay(dataset)
+    delayer = ExponentialDelayer(60 * 60 * 24)
+    delayed_dataset = delayer.add_delay(dataset)
     model = SklearnModel(LinearRegression())
     aggregator = AggFeaturizer(lambda x: max(x))
     stateful_model = StatefulModel(model, aggregator, timedelta(minutes=360))

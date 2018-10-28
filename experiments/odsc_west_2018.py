@@ -20,8 +20,7 @@ import os
 
 def run_one(lookback: int
             , frequency: DataFrequency
-            , noise_intensity: int
-            , noise_type: Delayer
+            , delayer: Delayer
             , sensitive: bool) -> Dict[str, float]:
     if sensitive:
         aggregator = AggFeaturizer(lambda x: max(x))
@@ -38,8 +37,8 @@ def run_one(lookback: int
         num_points=1000,
         frequency=frequency
     )
-    noiser = noise_type(noise_intensity)
-    delayed_dataset = noiser.add_delay(dataset)
+
+    delayed_dataset = delayer.add_delay(dataset)
     model = SklearnModel(LinearRegression())
     stateful_model = StatefulModel(model, aggregator, state)
     stateful_model.train(delayed_dataset)
@@ -47,8 +46,8 @@ def run_one(lookback: int
     delay_preds = stateful_model.predict(delayed_dataset, True)
     measure = DefaultMeasures(no_delay, delay_preds)
     result = {"lookback_s": lookback,
-              "noise_type": type(noiser).__name__,
-              "noise_intensity_s": noiser.noise_intensity,
+              "delay_type": type(delayer).__name__,
+              "delay_intensity_s": delayer.noise_intensity,
               "frequency_type": type(frequency).__name__,
               "frequency_s": frequency.frequency,
               "sensitive": sensitive}
@@ -58,18 +57,16 @@ def run_one(lookback: int
 
 def experiment(name
                , lookback_range: List[int] = [600]
-               , noise_intensity_range: List[int] = [600]
-               , noise_types: List[Delayer] = [ExponentialDelayer]
-               , frequency_range: List[DataFrequency] = [PoissonProcess(180)]
+               , delayers: List[Delayer] = [ExponentialDelayer(600)]
+               , frequencies: List[DataFrequency] = [PoissonProcess(180)]
                , sensitivities: List[bool] = [True]):
     metrics = []
     print(f"Running experiment {name}")
     for lookback in lookback_range:
-        for noise_intensity in noise_intensity_range:
-            for noise_type in noise_types:
-                for frequency in frequency_range:
-                    for sensitivity in sensitivities:
-                        metrics.append(run_one(lookback, frequency, noise_intensity, noise_type, sensitivity))
+        for delayer in delayers:
+            for frequency in frequencies:
+                for sensitivity in sensitivities:
+                    metrics.append(run_one(lookback, frequency, delayer, sensitivity))
     df = pd.DataFrame.from_records(metrics)
     df.to_csv(name + ".csv", index=False)
     return df
@@ -86,22 +83,26 @@ def main():
     sensitivities = [True, False]
     sensitivity_df = experiment("sensitivities", lookback_range=lookback_range, sensitivities=sensitivities)
 
-    noise_types = [ExponentialDelayer]
-    noise_intensities = [60, 120, 300, 600, 1200, 3000, 6000]
-    noise_df = experiment("delay", noise_intensity_range=noise_intensities, noise_types=noise_types)
+    delayers = [ExponentialDelayer(60),
+                ExponentialDelayer(120),
+                ExponentialDelayer(300),
+                ExponentialDelayer(600),
+                ExponentialDelayer(1200),
+                ExponentialDelayer(3000),
+                ExponentialDelayer(6000)]
+    noise_df = experiment("delay", delayers=delayers)
 
-    frequency_range = [PoissonProcess(60),
-                       PoissonProcess(120),
-                       PoissonProcess(180),
-                       PoissonProcess(600),
-                       PoissonProcess(1200)]
-    freq_df = experiment("frequencies", frequency_range=frequency_range)
+    frequencies = [PoissonProcess(60),
+                   PoissonProcess(120),
+                   PoissonProcess(180),
+                   PoissonProcess(600),
+                   PoissonProcess(1200)]
+    freq_df = experiment("frequencies", frequencies=frequencies)
 
     # Interaction
     freq_delay_df = experiment("freq_and_delay",
-                               frequency_range=frequency_range,
-                               noise_intensity_range=noise_intensities,
-                               noise_types=noise_types)
+                               frequencies=frequencies,
+                               delayers=delayers)
 
     os.chdir("..")
 
