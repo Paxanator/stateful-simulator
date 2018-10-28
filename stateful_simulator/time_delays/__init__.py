@@ -1,3 +1,3 @@
-import stateful_simulator.time_delays.UniformNoiser
-import stateful_simulator.time_delays.ExponentialNoiser
-import stateful_simulator.time_delays.Noiser
+import stateful_simulator.time_delays.UniformDelayer
+import stateful_simulator.time_delays.ExponentialDelayer
+import stateful_simulator.time_delays.Delayer

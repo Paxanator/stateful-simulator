@@ -5,7 +5,7 @@ from stateful_simulator.datatypes.DataTypes import TimeSeriesDataSet, RecordTime
 from datetime import datetime
 
 
-class Noiser(ABC):
+class Delayer(ABC):
 
     def add_delay(self, dataset: TimeSeriesDataSet) ->  TimeSeriesDataSet:
         timestamps = dataset.timestamps

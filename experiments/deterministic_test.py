@@ -1,6 +1,6 @@
 from stateful_simulator.models.SklearnModel import SklearnModel
 from stateful_simulator.models.StatefulModel import StatefulModel
-from stateful_simulator.time_delays.ExponentialNoiser import ExponentialNoiser
+from stateful_simulator.time_delays.ExponentialDelayer import ExponentialDelayer
 from stateful_simulator.data_generators.util_data import deterministic_dataset
 from stateful_simulator.featurizers.AggFeaturizer import AggFeaturizer
 from stateful_simulator.metrics.DefaultMeasures import DefaultMeasures
@@ -22,7 +22,7 @@ def main():
                                     frequency=lambda: timedelta(minutes=random()*3)
                                     )
 
-    noiser = ExponentialNoiser(1/(60))
+    noiser = ExponentialDelayer(1 / (60))
     delayed_dataset = noiser.add_delay(dataset)
     model = SklearnModel(LinearRegression())
 

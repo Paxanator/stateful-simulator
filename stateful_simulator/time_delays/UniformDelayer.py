@@ -1,11 +1,11 @@
 
 
-from stateful_simulator.time_delays.Noiser import Noiser
+from stateful_simulator.time_delays.Delayer import Delayer
 from random import random
 from datetime import datetime,timedelta
 
 
-class UniformNoiser(Noiser):
+class UniformDela(Delayer):
 
     def __init__(self, lower_s: float, upper_s: float)-> None:
         self.lower_s = lower_s

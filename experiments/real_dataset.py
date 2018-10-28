@@ -1,6 +1,6 @@
 from stateful_simulator.models.SklearnModel import SklearnModel
 from stateful_simulator.models.StatefulModel import StatefulModel
-from stateful_simulator.time_delays.ExponentialNoiser import ExponentialNoiser
+from stateful_simulator.time_delays.ExponentialDelayer import ExponentialDelayer
 from stateful_simulator.data_generators.util_data import get_data_set
 from stateful_simulator.featurizers.AggFeaturizer import AggFeaturizer
 from stateful_simulator.metrics.DefaultMeasures import DefaultMeasures
@@ -16,7 +16,7 @@ def main():
         target_col='Appliances',
         feature_cols=["lights"] + ["T" + str(room) for room in range(1,10)] + ["RH_" + str(room) for room in range(1,10)],
         train_percetange=0.5)
-    noiser = ExponentialNoiser(60*60*24)
+    noiser = ExponentialDelayer(60 * 60 * 24)
     delayed_dataset = noiser.add_delay(dataset)
     model = SklearnModel(LinearRegression())
     aggregator = AggFeaturizer(lambda x: max(x))

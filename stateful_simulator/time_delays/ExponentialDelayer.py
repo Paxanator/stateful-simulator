@@ -1,12 +1,12 @@
 
 
-from stateful_simulator.time_delays.Noiser import Noiser
+from stateful_simulator.time_delays.Delayer import Delayer
 import math
 from random import random
 from datetime import datetime,timedelta
 
 
-class ExponentialNoiser(Noiser):
+class ExponentialDelayer(Delayer):
 
     def __init__(self, mean_arrival_s: float)-> None:
         self.mean_arrival_s = mean_arrival_s

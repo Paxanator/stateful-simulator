@@ -1,7 +1,7 @@
 from stateful_simulator.models.SklearnModel import SklearnModel
 from stateful_simulator.models.StatefulModel import StatefulModel
-from stateful_simulator.time_delays.ExponentialNoiser import ExponentialNoiser
-from stateful_simulator.time_delays.Noiser import Noiser
+from stateful_simulator.time_delays.ExponentialDelayer import ExponentialDelayer
+from stateful_simulator.time_delays.Delayer import Delayer
 from stateful_simulator.frequencies.DataFrequency import DataFrequency
 from stateful_simulator.frequencies.PoissonProcess import PoissonProcess
 from stateful_simulator.data_generators.util_data import deterministic_dataset
@@ -21,7 +21,7 @@ import os
 def run_one(lookback: int
             , frequency: DataFrequency
             , noise_intensity: int
-            , noise_type: Noiser
+            , noise_type: Delayer
             , sensitive: bool) -> Dict[str, float]:
     if sensitive:
         aggregator = AggFeaturizer(lambda x: max(x))
@@ -59,7 +59,7 @@ def run_one(lookback: int
 def experiment(name
                , lookback_range: List[int] = [600]
                , noise_intensity_range: List[int] = [600]
-               , noise_types: List[Noiser] = [ExponentialNoiser]
+               , noise_types: List[Delayer] = [ExponentialDelayer]
                , frequency_range: List[DataFrequency] = [PoissonProcess(180)]
                , sensitivities: List[bool] = [True]):
     metrics = []
@@ -86,7 +86,7 @@ def main():
     sensitivities = [True, False]
     sensitivity_df = experiment("sensitivities", lookback_range=lookback_range, sensitivities=sensitivities)
 
-    noise_types = [ExponentialNoiser]
+    noise_types = [ExponentialDelayer]
     noise_intensities = [60, 120, 300, 600, 1200, 3000, 6000]
     noise_df = experiment("delay", noise_intensity_range=noise_intensities, noise_types=noise_types)
 
