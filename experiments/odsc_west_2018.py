@@ -76,7 +76,7 @@ def experiment(name
 
 
 def main():
-    experiment_name = "mega_experiment_" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    experiment_name = "odsc_west_2018_" + datetime.now().strftime("%Y%m%d-%H%M%S")
     os.mkdir(experiment_name)
     os.chdir(experiment_name)  # Sorry about changing dirs
 
