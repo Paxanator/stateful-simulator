@@ -52,6 +52,7 @@ def run_one(lookback: int
               "delay_intensity_s": delayer.delay_intensity,
               "frequency_type": type(frequency).__name__,
               "frequency_s": frequency.frequency,
+              "periodicity_s": 1/frequency.frequency,
               "sensitive": sensitive
               }
     result.update(measure.point_metrics())
@@ -62,7 +63,7 @@ def experiment(name
                , lookback_range: List[int] = [100]
                , delayers: List[Delayer] = [ExponentialDelayer(10)]
                , frequencies: List[DataFrequency] = [PoissonProcess(10)]
-               , sensitivities: List[bool] = [True]):
+               , sensitivities: List[bool] = [False]):
     metrics = []
     print(f"Running experiment {name}")
     for lookback in lookback_range:
@@ -94,13 +95,14 @@ def main():
     delayers = make_range_object(ExponentialDelayer,numeric_range)
     noise_df = experiment("delay", delayers=delayers)
 
-    frequencies = make_range_object(PoissonProcess,numeric_range)
+    frequencies = make_range_object(PoissonProcess, numeric_range)
     freq_df = experiment("frequencies", frequencies=frequencies)
 
     # Show Frequency and lookback are same
     experiment("freq_vs_lookback",
-               frequencies=frequencies,
-               lookback_range=lookback_range)
+               frequencies=make_range_object(PoissonProcess, range(1,1000,10)),
+               lookback_range=make_range_object(lambda x: x, range(1,1000,10)),
+               delayers=[ExponentialDelayer(100)])
 
     # Interaction Effects
     interaction = experiment("interaction",

@@ -9,7 +9,8 @@ class LatenessMeasure(Metrics):
                 self.average_delay(),
                 self.average_num_obs_difference(),
                 self.max_num_obs_difference(),
-                self.average_expected_number_obs()]
+                self.average_expected_number_obs(),
+                self.percent_points_missed()]
 
     def max_delay(self) -> PointMetric:
 
@@ -38,3 +39,8 @@ class LatenessMeasure(Metrics):
         return PointMetric("average_expected_number_obs",
                            "The expected number of observations, on average",
                            sum(obs.num_points for obs in self.no_delay)/len(self.no_delay))
+
+    def percent_points_missed(self):
+        return PointMetric("percent_points_missed",
+                           "The expected percentage of points missing",
+                           100* (self.average_num_obs_difference().value / self.average_expected_number_obs().value))
