@@ -16,6 +16,16 @@ This repository contains code that simulates model error due to out of order dat
 * tests.... maybe?
 * Way more...
 
+## Contributing
+If you want to contribute:
+
+* First of all, Thank You!!!
+* Second open up an issue saying what you would like to change and why
+* If you would like, fork the repo and make the changes in the issue.
+* Fourth Contribute back the changes in a PR. It will be reviewed and ideally merged!
+
+No issue is to small! All help is appreciated
+
 ## Talks
 * [ODSC West 2018](https://odsc.com/training/portfolio/how-to-reason-about-stateful-streaming-machine-learning-serving-lessons-from-production)
 
